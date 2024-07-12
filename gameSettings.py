@@ -1,0 +1,26 @@
+# Game name
+GAME_TITLE = 'Legends of Eldoria'
+
+# Screen width and height window
+SCREEN_WIDTH = 1024 # 16 * 64 OR 32 * 32 OR 64 * 16
+SCREEN_HEIGHT = 768 # 16 * 48 OR 32 * 24 OR 64 * 12
+
+# FPS count
+FPS = 60
+
+#TILE
+TILESIZE = 32
+GRID_WIDTH = SCREEN_WIDTH / TILESIZE
+GRID_HEIGHT = SCREEN_HEIGHT / TILESIZE
+
+# Colors (R, G, B)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+DARKGREY = (40, 40, 40)
+LIGHTGREY = (100, 100, 100)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
+
+#BG
+BGCOLOR = DARKGREY
