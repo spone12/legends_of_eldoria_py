@@ -2,8 +2,7 @@ import pygame as pg
 import sys
 from os import path
 
-from Classes.printText import *
-
+from tileMap import *
 from Sprites.sprites import *
 from gameSettings import *
 
@@ -24,24 +23,22 @@ class legendsOfEldoria:
 
     def loadData(self):
         gameFolder = path.dirname(__file__)
-        self.mapData = []
-
-        with open(path.join(gameFolder, 'Maps/map.txt'), 'rt') as f:
-            for line in f:
-                self.mapData.append(line)
+        self.map = Map(path.join(gameFolder, 'Maps/map.txt'))
        
     def newGame(self):
         # initialize all variables and do all the setup for a new game
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         
-        for row, tiles in enumerate(self.mapData):
+        for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == '1':
                     Wall(self, col, row)
                 if tile == 'P':
                     self.player = Player(self, col, row)
- 
+
+        self.camera = Camera(self.map.width, self.map.height)
+
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
@@ -59,6 +56,7 @@ class legendsOfEldoria:
     def update(self):
         # update portion of the game loop
         self.allSprites.update()
+        self.camera.update(self.player)
 
     def drawGrid(self):
 
@@ -71,7 +69,10 @@ class legendsOfEldoria:
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.drawGrid()
-        self.allSprites.draw(self.screen)
+
+        for sprite in self.allSprites:
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
+
         pg.display.flip()
 
     def events(self):
