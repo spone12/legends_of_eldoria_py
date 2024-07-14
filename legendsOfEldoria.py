@@ -22,20 +22,7 @@ class legendsOfEldoria:
         self.loadData()
 
     def loadData(self):
-        gameFolder = path.dirname(__file__)
-        imgFolder = path.join(gameFolder, 'Images')
-        self.map = Map(path.join(gameFolder, 'Maps/map.txt'))
-
-        self.PLAYER_IMAGES = {
-            "up": pg.image.load(path.join(imgFolder, "Player/up.png")).convert_alpha(),
-            "down": pg.image.load(path.join(imgFolder, "Player/down.png")).convert_alpha(),
-            "left": pg.image.load(path.join(imgFolder, "Player/left.png")).convert_alpha(),
-            "right": pg.image.load(path.join(imgFolder, "Player/right.png")).convert_alpha()
-        }
-
-         # Текущее направление игрока
-        self.playerDirection = "up"
-        self.playerImg = self.PLAYER_IMAGES[self.playerDirection]
+        self.map = Map(path.join(GAME_FOLDER, 'Maps/map.txt'))
        
     def newGame(self):
 
@@ -101,24 +88,24 @@ class legendsOfEldoria:
                         self.quit()
                         break
                     case pg.K_LEFT:
-                        self.playerDirection = "left"
+                        self.player.direction = "left"
                         self.player.move(dx =- 1)
                         break
                     case pg.K_RIGHT:
-                        self.playerDirection = "right"
+                        self.player.direction = "right"
                         self.player.move(dx = 1)
                         break
                     case pg.K_UP:
-                        self.playerDirection = "up"
+                        self.player.direction = "up"
                         self.player.move(dy =- 1)
                         break
                     case pg.K_DOWN:
-                        self.playerDirection = "down"
+                        self.player.direction = "down"
                         self.player.move(dy = 1)
                         break
         
         # Обновление изображения игрока
-        self.player.image = self.PLAYER_IMAGES[self.playerDirection]
+        self.player.image = self.player.PLAYER_IMAGES[self.player.direction]
 
     def showStartScreen(self):
         pass

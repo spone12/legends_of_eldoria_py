@@ -8,7 +8,17 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
 
         self.game = game
-        self.image = game.playerImg
+
+        self.PLAYER_IMAGES = {
+            "up": pg.image.load(path.join(IMG_FOLDER, "Player/up.png")).convert_alpha(),
+            "down": pg.image.load(path.join(IMG_FOLDER, "Player/down.png")).convert_alpha(),
+            "left": pg.image.load(path.join(IMG_FOLDER, "Player/left.png")).convert_alpha(),
+            "right": pg.image.load(path.join(IMG_FOLDER, "Player/right.png")).convert_alpha()
+        }
+
+        # initial character direction
+        self.direction = 'up'
+        self.image = self.PLAYER_IMAGES[self.direction]
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

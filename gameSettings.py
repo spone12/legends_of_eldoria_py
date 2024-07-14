@@ -1,5 +1,6 @@
 # Game name
 import pygame as pg
+from os import path
 
 GAME_TITLE = 'Legends of Eldoria'
 
@@ -14,6 +15,10 @@ FPS = 60
 TILESIZE = 32
 GRID_WIDTH = SCREEN_WIDTH / TILESIZE
 GRID_HEIGHT = SCREEN_HEIGHT / TILESIZE
+
+# Folders
+GAME_FOLDER = path.dirname(__file__)
+IMG_FOLDER = path.join(GAME_FOLDER, 'Images')
 
 #Player settings
 PLAYER_SPEED = 1
