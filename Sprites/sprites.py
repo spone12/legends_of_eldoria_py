@@ -1,31 +1,34 @@
 import pygame as pg
+import random
 from gameSettings import *
 
-class Player(pg.sprite.Sprite):
+def collideWithWalls(sprite, group, dx=0, dy=0):
+    sprite.rect.x += dx * TILESIZE
+    sprite.rect.y += dy * TILESIZE
+    hit = pg.sprite.spritecollideany(sprite, group)
+    sprite.rect.x -= dx * TILESIZE
+    sprite.rect.y -= dy * TILESIZE
+    return hit
 
+class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
-
         self.game = game
-
         self.PLAYER_IMAGES = {
             "up": pg.image.load(path.join(IMG_FOLDER, "Player/up.png")).convert_alpha(),
             "down": pg.image.load(path.join(IMG_FOLDER, "Player/down.png")).convert_alpha(),
             "left": pg.image.load(path.join(IMG_FOLDER, "Player/left.png")).convert_alpha(),
             "right": pg.image.load(path.join(IMG_FOLDER, "Player/right.png")).convert_alpha()
         }
-
-        # initial character direction
         self.direction = 'up'
         self.image = self.PLAYER_IMAGES[self.direction]
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
 
-    def move(self, dx = 0, dy = 0):
-
-        if not self.collideWithWalls(dx, dy):
+    def move(self, dx=0, dy=0):
+        if not collideWithWalls(self, self.game.walls, dx, dy):
             self.x += dx
             self.y += dy
 
@@ -33,22 +36,81 @@ class Player(pg.sprite.Sprite):
         self.rect.x = self.x * TILESIZE
         self.rect.y = self.y * TILESIZE
 
-    def collideWithWalls(self, dx = 0, dy = 0):
+class Mob(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.allSprites, game.mobs
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(YELLOW)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.direction = random.choice(['left', 'right', 'up', 'down'])
+        self.change_direction_counter = 0
+        self.speed = 1  # Mob movement speed (in pixels per step)
+        self.last_update = pg.time.get_ticks()  # Last update time
 
-        for wall in self.game.walls:
-            if wall.x == self.x + dx and wall.y == self.y + dy:
-                return True
-        return False
+    def move(self, dx=0, dy=0):
+        if not collideWithWalls(self, self.game.walls, dx, dy):
+            self.x += dx * self.speed
+            self.y += dy * self.speed
+
+    def update(self, player):
+        now = pg.time.get_ticks()
+        if now - self.last_update > 500:  # Update every 500 ms
+            self.last_update = now
+
+            dx, dy = 0, 0
+            if self.x < player.x:
+                dx = 1
+            elif self.x > player.x:
+                dx = -1
+            if self.y < player.y:
+                dy = 1
+            elif self.y > player.y:
+                dy = -1
+
+            if dx != 0 and not collideWithWalls(self, self.game.walls, dx, 0):
+                self.move(dx=dx)
+            elif dy != 0 and not collideWithWalls(self, self.game.walls, 0, dy):
+                self.move(dy=dy)
+            else:
+                self.random_move()
+
+            if pg.sprite.collide_rect(self, player):
+                self.handle_collision(player)
+
+            self.rect.x = self.x * TILESIZE
+            self.rect.y = self.y * TILESIZE
+
+    def random_move(self):
+        if self.change_direction_counter == 0:
+            self.direction = random.choice(['left', 'right', 'up', 'down'])
+            self.change_direction_counter = 60
+
+        if self.direction == 'left' and not collideWithWalls(self, self.game.walls, -1, 0):
+            self.move(dx=-1)
+        elif self.direction == 'right' and not collideWithWalls(self, self.game.walls, 1, 0):
+            self.move(dx=1)
+        elif self.direction == 'up' and not collideWithWalls(self, self.game.walls, 0, -1):
+            self.move(dy=-1)
+        elif self.direction == 'down' and not collideWithWalls(self, self.game.walls, 0, 1):
+            self.move(dy=1)
+
+        self.change_direction_counter -= 1
+
+    def handle_collision(self, player):
+        print("Collision with player")
 
 class Wall(pg.sprite.Sprite):
-
     def __init__(self, game, x, y):
         self.groups = game.allSprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
-        
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.wallImg = pg.image.load(path.join(IMG_FOLDER, "wall.png")).convert_alpha()
+        self.wallImg = pg.transform.scale(self.wallImg, (TILESIZE, TILESIZE))
+        self.image = self.wallImg
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

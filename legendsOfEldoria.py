@@ -29,11 +29,14 @@ class legendsOfEldoria:
         # initialize all variables and do all the setup for a new game
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
         
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == '1':
                     Wall(self, col, row)
+                if tile == 'M':
+                    Mob(self, col, row)
                 if tile == 'P':
                     self.player = Player(self, col, row)
 
@@ -47,7 +50,7 @@ class legendsOfEldoria:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             self.update()
-            self.draw()
+            self.draw(True)
 
     def quit(self):
         pg.quit()
@@ -55,7 +58,9 @@ class legendsOfEldoria:
 
     def update(self):
         # update portion of the game loop
-        self.allSprites.update()
+        #self.allSprites.update()
+        self.player.update()
+        self.mobs.update(self.player)
         self.camera.update(self.player)
 
     def drawGrid(self):
@@ -66,9 +71,13 @@ class legendsOfEldoria:
         for y in range(0, SCREEN_HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (SCREEN_WIDTH, y))
 
-    def draw(self):
+    def draw(self, debug = False):
+
         self.screen.fill(BGCOLOR)
-        self.drawGrid()
+
+        if debug: 
+            pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
+            self.drawGrid()
 
         for sprite in self.allSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
