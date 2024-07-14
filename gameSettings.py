@@ -1,4 +1,6 @@
 # Game name
+import pygame as pg
+
 GAME_TITLE = 'Legends of Eldoria'
 
 # Screen width and height window
@@ -15,6 +17,7 @@ GRID_HEIGHT = SCREEN_HEIGHT / TILESIZE
 
 #Player settings
 PLAYER_SPEED = 1
+PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 
 # Colors (R, G, B)
 WHITE = (255, 255, 255)

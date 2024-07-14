@@ -23,9 +23,22 @@ class legendsOfEldoria:
 
     def loadData(self):
         gameFolder = path.dirname(__file__)
+        imgFolder = path.join(gameFolder, 'Images')
         self.map = Map(path.join(gameFolder, 'Maps/map.txt'))
+
+        self.PLAYER_IMAGES = {
+            "up": pg.image.load(path.join(imgFolder, "Player/up.png")).convert_alpha(),
+            "down": pg.image.load(path.join(imgFolder, "Player/down.png")).convert_alpha(),
+            "left": pg.image.load(path.join(imgFolder, "Player/left.png")).convert_alpha(),
+            "right": pg.image.load(path.join(imgFolder, "Player/right.png")).convert_alpha()
+        }
+
+         # Текущее направление игрока
+        self.playerDirection = "up"
+        self.playerImg = self.PLAYER_IMAGES[self.playerDirection]
        
     def newGame(self):
+
         # initialize all variables and do all the setup for a new game
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
@@ -88,18 +101,24 @@ class legendsOfEldoria:
                         self.quit()
                         break
                     case pg.K_LEFT:
+                        self.playerDirection = "left"
                         self.player.move(dx =- 1)
                         break
                     case pg.K_RIGHT:
+                        self.playerDirection = "right"
                         self.player.move(dx = 1)
                         break
                     case pg.K_UP:
+                        self.playerDirection = "up"
                         self.player.move(dy =- 1)
                         break
                     case pg.K_DOWN:
+                        self.playerDirection = "down"
                         self.player.move(dy = 1)
                         break
-
+        
+        # Обновление изображения игрока
+        self.player.image = self.PLAYER_IMAGES[self.playerDirection]
 
     def showStartScreen(self):
         pass
