@@ -49,32 +49,40 @@ class Mob(pg.sprite.Sprite):
         self.direction = random.choice(['left', 'right', 'up', 'down'])
         self.change_direction_counter = 0
         self.speed = 1  # Mob movement speed (in pixels per step)
-        self.last_update = pg.time.get_ticks()  # Last update time
+        self.last_update = pg.time.get_ticks()  # Latest update time
+        self.visibility_radius = 5  #  Mob sight radius in tally
 
     def move(self, dx=0, dy=0):
         if not collideWithWalls(self, self.game.walls, dx, dy):
             self.x += dx * self.speed
             self.y += dy * self.speed
 
+    def can_see_player(self, player):
+        distance = ((self.x - player.x) ** 2 + (self.y - player.y) ** 2) ** 0.5
+        return distance <= self.visibility_radius
+
     def update(self, player):
         now = pg.time.get_ticks()
-        if now - self.last_update > 500:  # Update every 500 ms
+        if now - self.last_update > 500:  # update every 500 ms
             self.last_update = now
 
-            dx, dy = 0, 0
-            if self.x < player.x:
-                dx = 1
-            elif self.x > player.x:
-                dx = -1
-            if self.y < player.y:
-                dy = 1
-            elif self.y > player.y:
-                dy = -1
+            if self.can_see_player(player):
+                dx, dy = 0, 0
+                if self.x < player.x:
+                    dx = 1
+                elif self.x > player.x:
+                    dx = -1
+                if self.y < player.y:
+                    dy = 1
+                elif self.y > player.y:
+                    dy = -1
 
-            if dx != 0 and not collideWithWalls(self, self.game.walls, dx, 0):
-                self.move(dx=dx)
-            elif dy != 0 and not collideWithWalls(self, self.game.walls, 0, dy):
-                self.move(dy=dy)
+                if dx != 0 and not collideWithWalls(self, self.game.walls, dx, 0):
+                    self.move(dx=dx)
+                elif dy != 0 and not collideWithWalls(self, self.game.walls, 0, dy):
+                    self.move(dy=dy)
+                else:
+                    self.avoid_obstacle(dx, dy)
             else:
                 self.random_move()
 
@@ -83,6 +91,16 @@ class Mob(pg.sprite.Sprite):
 
             self.rect.x = self.x * TILESIZE
             self.rect.y = self.y * TILESIZE
+
+    def avoid_obstacle(self, dx, dy):
+        # Алгоритм обхода препятствий
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Directions: right, left, down, up
+        random.shuffle(directions)  # Shuffle directions for randomized traversal
+        for direction in directions:
+            new_dx, new_dy = direction
+            if not collideWithWalls(self, self.game.walls, new_dx, new_dy):
+                self.move(dx=new_dx, dy=new_dy)
+                break
 
     def random_move(self):
         if self.change_direction_counter == 0:
@@ -97,11 +115,13 @@ class Mob(pg.sprite.Sprite):
             self.move(dy=-1)
         elif self.direction == 'down' and not collideWithWalls(self, self.game.walls, 0, 1):
             self.move(dy=1)
+        else:
+            self.change_direction_counter = 0  # Forced to change direction if it hits a wall
 
         self.change_direction_counter -= 1
 
     def handle_collision(self, player):
-        print("Collision with player")
+        print("Collision with a player!")
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
