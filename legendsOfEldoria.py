@@ -82,6 +82,10 @@ class legendsOfEldoria:
         for sprite in self.allSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
 
+        # HUD
+        self.player.drawPlayerHealth(self.screen, 10, 10, self.player.hp / PLAYER_HP)
+        self.player.drawPlayerMana(self.screen, 10, 35, self.player.mp / PLAYER_MP)
+
         pg.display.flip()
 
     def events(self):
@@ -98,19 +102,19 @@ class legendsOfEldoria:
                         break
                     case pg.K_LEFT:
                         self.player.direction = "left"
-                        self.player.move(dx =- 1)
+                        self.player.move(dx =- self.player.speed)
                         break
                     case pg.K_RIGHT:
                         self.player.direction = "right"
-                        self.player.move(dx = 1)
+                        self.player.move(dx = self.player.speed)
                         break
                     case pg.K_UP:
                         self.player.direction = "up"
-                        self.player.move(dy =- 1)
+                        self.player.move(dy =- self.player.speed)
                         break
                     case pg.K_DOWN:
                         self.player.direction = "down"
-                        self.player.move(dy = 1)
+                        self.player.move(dy = self.player.speed)
                         break
         
         # Обновление изображения игрока

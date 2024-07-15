@@ -15,6 +15,7 @@ class Player(pg.sprite.Sprite):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+
         self.PLAYER_IMAGES = {
             "up": pg.image.load(path.join(IMG_FOLDER, "Player/up.png")).convert_alpha(),
             "down": pg.image.load(path.join(IMG_FOLDER, "Player/down.png")).convert_alpha(),
@@ -26,6 +27,40 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
+
+        self.hp = PLAYER_HP 
+        self.mp = PLAYER_MP
+        self.lvl = PLAYER_LVL
+        self.speed = 1
+
+    # HUD functions
+    def drawPlayerHealth(self, surface, x, y, pct):
+        
+        if pct < 0:
+            pct = 0
+
+        fill = pct * BAR_LENGTH
+        outlineRect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+        fillRect = pg.Rect(x, y, fill, BAR_HEIGHT)
+
+        if pct > 0.6:
+            color = DARK_GREEN
+        elif pct > 0.3:
+            color = YELLOW
+        else:
+            color = RED
+
+        pg.draw.rect(surface, color, fillRect, 10, 40)
+        pg.draw.rect(surface, WHITE, outlineRect, 2, 40)
+
+    def drawPlayerMana(self, surface, x, y, pct):
+        
+        fill = pct * BAR_LENGTH
+        outlineRect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+        fillRect = pg.Rect(x, y, fill, BAR_HEIGHT)
+
+        pg.draw.rect(surface, BLUE, fillRect, 10, 40)
+        pg.draw.rect(surface, WHITE, outlineRect, 2, 40)
 
     def move(self, dx=0, dy=0):
         if not collideWithWalls(self, self.game.walls, dx, dy):
@@ -43,14 +78,17 @@ class Mob(pg.sprite.Sprite):
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image.fill(YELLOW)
+        self.last_update = pg.time.get_ticks()  # Latest update time
+        
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
         self.direction = random.choice(['left', 'right', 'up', 'down'])
         self.change_direction_counter = 0
+
         self.speed = 1  # Mob movement speed (in pixels per step)
-        self.last_update = pg.time.get_ticks()  # Latest update time
         self.visibility_radius = 5  #  Mob sight radius in tally
+        self.hp = 20
 
     def move(self, dx=0, dy=0):
         if not collideWithWalls(self, self.game.walls, dx, dy):

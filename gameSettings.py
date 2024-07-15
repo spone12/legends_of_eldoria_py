@@ -20,7 +20,14 @@ GRID_HEIGHT = SCREEN_HEIGHT / TILESIZE
 GAME_FOLDER = path.dirname(__file__)
 IMG_FOLDER = path.join(GAME_FOLDER, 'Images')
 
+# HUD
+BAR_LENGTH = 150
+BAR_HEIGHT = 20
+
 #Player settings
+PLAYER_HP = 100
+PLAYER_MP = 20
+PLAYER_LVL = 1
 PLAYER_SPEED = 1
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
 
@@ -30,8 +37,10 @@ BLACK = (0, 0, 0)
 DARKGREY = (40, 40, 40)
 LIGHTGREY = (100, 100, 100)
 GREEN = (0, 255, 0)
+DARK_GREEN = (3, 146, 94)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+BLUE = (0, 0, 255)
 BROWN = (106, 55, 5)
 
 # general colors
