@@ -22,7 +22,10 @@ class legendsOfEldoria:
         self.loadData()
 
     def loadData(self):
-        self.map = Map(path.join(GAME_FOLDER, 'Maps/map.txt'))
+        #self.map = Map(path.join(GAME_FOLDER, 'Maps/map.txt'))
+        self.map = TiledMap(path.join(GAME_FOLDER, 'Maps/startLocation.tmx'))
+        self.mapImg = self.map.makeMap()
+        self.mapRect = self.mapImg.get_rect()
        
     def newGame(self):
 
@@ -31,15 +34,16 @@ class legendsOfEldoria:
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == '1':
-                    Wall(self, col, row)
-                if tile == 'M':
-                    Mob(self, col, row)
-                if tile == 'P':
-                    self.player = Player(self, col, row)
+        # for row, tiles in enumerate(self.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == '1':
+        #             Wall(self, col, row)
+        #         if tile == 'M':
+        #             Mob(self, col, row)
+        #         if tile == 'P':
+        #             self.player = Player(self, col, row)
 
+        self.player = Player(self, 5, 5)
         self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
@@ -61,7 +65,7 @@ class legendsOfEldoria:
         #self.allSprites.update()
         self.player.update()
         self.mobs.update(self.player)
-        self.camera.update(self.player)
+        self.camera.update(self.player, True)
 
     def drawGrid(self):
 
@@ -73,7 +77,8 @@ class legendsOfEldoria:
 
     def draw(self, debug = False):
 
-        self.screen.fill(BGCOLOR)
+        #self.screen.fill(BGCOLOR)
+        self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
 
         if debug: 
             pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
