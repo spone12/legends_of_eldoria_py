@@ -1,2 +1,2 @@
-# kings-slayer
-RPG game on python
+# Legends of eldoria
+RPG game
