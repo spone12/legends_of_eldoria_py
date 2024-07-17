@@ -103,7 +103,7 @@ class Mob(pg.sprite.Sprite):
         self.change_direction_counter = 0
 
         self.speed = 10  # Mob movement speed (in pixels per step)
-        self.visibility_radius = 5  #  Mob sight radius in tally
+        self.visibility_radius = 50  #  Mob sight radius in tally
         self.hp = 20
 
     def move(self, dx=0, dy=0):

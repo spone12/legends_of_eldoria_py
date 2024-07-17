@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 from os import path
+from Classes.debug import *
 
 from tileMap import *
 from Sprites.sprites import *
@@ -22,7 +23,6 @@ class legendsOfEldoria:
         self.loadData()
 
     def loadData(self):
-        #self.map = Map(path.join(GAME_FOLDER, 'Maps/map.txt'))
         self.map = TiledMap(path.join(GAME_FOLDER, 'Maps/startLocation.tmx'))
         self.mapImg = self.map.makeMap()
         self.mapRect = self.mapImg.get_rect()
@@ -30,6 +30,7 @@ class legendsOfEldoria:
     def newGame(self):
 
         # initialize all variables and do all the setup for a new game
+        self.debug = Debug(self)
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
@@ -68,34 +69,20 @@ class legendsOfEldoria:
         self.mobs.update(self.player)
         self.camera.update(self.player, True)
 
-    def drawGrid(self):
-
-        for x in range(0, SCREEN_WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, SCREEN_HEIGHT))
-
-        for y in range(0, SCREEN_HEIGHT, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (0, y), (SCREEN_WIDTH, y))
-
     def draw(self):
 
         #self.screen.fill(BGCOLOR)
         self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
-
-        if self.drawDebug: 
-            pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-            #self.drawGrid()
 
         for sprite in self.allSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
 
             if self.drawDebug:
                 pass
-                #pg.draw.rect(self.screen, CYAN, self.camera.applyRect(sprite.hit_rect), 1)
 
         if self.drawDebug:
-            for wall in self.walls:
-                pg.draw.rect(self.screen, CYAN, self.camera.applyRect(wall.rect), 1)
-
+            Debug.obstacles(self)
+            
         # HUD
         self.player.drawPlayerHealth(self.screen, 10, 10, self.player.hp / PLAYER_HP)
         self.player.drawPlayerMana(self.screen, 10, 35, self.player.mp / PLAYER_MP)
@@ -112,7 +99,7 @@ class legendsOfEldoria:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
-                if event.key == pg.K_DELETE:
+                if event.key == pg.K_F1:
                     self.drawDebug = not self.drawDebug
         
         # Обновление изображения игрока
