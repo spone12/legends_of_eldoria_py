@@ -20,20 +20,20 @@ class TiledMap:
         tmx = pytmx.load_pygame(filename, pixelalpha=True)
         self.width = tmx.width * tmx.tilewidth
         self.height = tmx.height * tmx.tileheight
-        self.tmxdata = tmx
+        self.tmxData = tmx
 
     def render(self, surface):
-        ti = self.tmxdata.get_tile_image_by_gid
+        ti = self.tmxData.get_tile_image_by_gid
 
-        for layer in self.tmxdata.visible_layers:
+        for layer in self.tmxData.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, gid in layer:
                     tile = ti(gid)
 
                     if tile:
                         surface.blit(tile, 
-                            (x * self.tmxdata.tilewidth,
-                            y * self.tmxdata.tileheight)
+                            (x * self.tmxData.tilewidth,
+                            y * self.tmxData.tileheight)
                         )
     
     def makeMap(self):

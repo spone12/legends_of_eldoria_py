@@ -3,11 +3,11 @@ import random
 from gameSettings import *
 
 def collideWithWalls(sprite, group, dx=0, dy=0):
-    sprite.rect.x += dx * TILESIZE
-    sprite.rect.y += dy * TILESIZE
+    sprite.rect.x += dx #* TILESIZE
+    sprite.rect.y += dy #* TILESIZE
     hit = pg.sprite.spritecollideany(sprite, group)
-    sprite.rect.x -= dx * TILESIZE
-    sprite.rect.y -= dy * TILESIZE
+    sprite.rect.x -= dx #* TILESIZE
+    sprite.rect.y -= dy #* TILESIZE
     return hit
 
 class Player(pg.sprite.Sprite):
@@ -31,7 +31,22 @@ class Player(pg.sprite.Sprite):
         self.hp = PLAYER_HP 
         self.mp = PLAYER_MP
         self.lvl = PLAYER_LVL
-        self.speed = 1
+        self.speed = 3
+
+    def get_keys(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT] or keys[pg.K_a]:
+            self.direction = "left"
+            self.move(dx =- self.speed)
+        if keys[pg.K_RIGHT] or keys[pg.K_d]:
+            self.direction = "right"
+            self.move(dx = self.speed)
+        if keys[pg.K_UP] or keys[pg.K_w]:
+            self.direction = "up"
+            self.move(dy =- self.speed)
+        if keys[pg.K_DOWN] or keys[pg.K_s]:
+            self.direction = "down"
+            self.move(dy = self.speed)
 
     # HUD functions
     def drawPlayerHealth(self, surface, x, y, pct):
@@ -68,8 +83,9 @@ class Player(pg.sprite.Sprite):
             self.y += dy
 
     def update(self):
-        self.rect.x = self.x * TILESIZE
-        self.rect.y = self.y * TILESIZE
+        self.get_keys()
+        self.rect.x = self.x #* TILESIZE
+        self.rect.y = self.y #* TILESIZE
 
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -86,7 +102,7 @@ class Mob(pg.sprite.Sprite):
         self.direction = random.choice(['left', 'right', 'up', 'down'])
         self.change_direction_counter = 0
 
-        self.speed = 1  # Mob movement speed (in pixels per step)
+        self.speed = 10  # Mob movement speed (in pixels per step)
         self.visibility_radius = 5  #  Mob sight radius in tally
         self.hp = 20
 
@@ -101,7 +117,7 @@ class Mob(pg.sprite.Sprite):
 
     def update(self, player):
         now = pg.time.get_ticks()
-        if now - self.last_update > 500:  # update every 500 ms
+        if now - self.last_update > 100:  # update every 500 ms
             self.last_update = now
 
             if self.can_see_player(player):
@@ -127,8 +143,8 @@ class Mob(pg.sprite.Sprite):
             if pg.sprite.collide_rect(self, player):
                 self.handle_collision(player)
 
-            self.rect.x = self.x * TILESIZE
-            self.rect.y = self.y * TILESIZE
+            self.rect.x = self.x #* TILESIZE
+            self.rect.y = self.y #* TILESIZE
 
     def avoid_obstacle(self, dx, dy):
         # Алгоритм обхода препятствий
@@ -161,16 +177,13 @@ class Mob(pg.sprite.Sprite):
     def handle_collision(self, player):
         print("Collision with a player!")
 
-class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.allSprites, game.walls
+class Obstacle(pg.sprite.Sprite):
+    def __init__(self, game, x, y, width, height):
+        self.groups = game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.wallImg = pg.image.load(path.join(IMG_FOLDER, "wall.png")).convert_alpha()
-        self.wallImg = pg.transform.scale(self.wallImg, (TILESIZE, TILESIZE))
-        self.image = self.wallImg
-        self.rect = self.image.get_rect()
+        self.rect = pg.Rect(x, y, width, height)
         self.x = x
         self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
+        self.rect.x = x
+        self.rect.y = y

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="10">
  <tileset firstgid="1" source="floorTiles.tsx"/>
  <layer id="1" name="Ground" width="80" height="50">
   <data encoding="csv">
@@ -217,4 +217,15 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="6" name="Obstacles">
+  <object id="1" name="wall" x="703.576" y="736.833" width="320.333" height="31.3939"/>
+  <object id="2" name="player" x="671.058" y="895.978" width="33.4298" height="31.3939" rotation="0.493907"/>
+  <object id="3" name="wall" x="703.061" y="767.467" width="254.703" height="31.3939" rotation="270.217"/>
+  <object id="4" name="wall" x="991.873" y="767.761" width="254.222" height="31.3939" rotation="270.217"/>
+  <object id="5" name="wall" x="926.833" y="479.303" width="33.333" height="32.8939"/>
+  <object id="6" name="wall" x="704.833" y="511.803" width="96.333" height="31.3939"/>
+  <object id="7" name="wall" x="927.833" y="512.803" width="95.333" height="31.3939"/>
+  <object id="8" name="wall" x="767.333" y="478.053" width="33.333" height="32.8939"/>
+  <object id="9" name="enemy" x="864.285" y="1057.8" width="33.4298" height="31.3939" rotation="0.493907"/>
+ </objectgroup>
 </map>

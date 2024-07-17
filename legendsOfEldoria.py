@@ -33,18 +33,19 @@ class legendsOfEldoria:
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
-        
-        # for row, tiles in enumerate(self.map.data):
-        #     for col, tile in enumerate(tiles):
-        #         if tile == '1':
-        #             Wall(self, col, row)
-        #         if tile == 'M':
-        #             Mob(self, col, row)
-        #         if tile == 'P':
-        #             self.player = Player(self, col, row)
 
-        self.player = Player(self, 5, 5)
+        for tileObject in self.map.tmxData.objects:
+            if tileObject.name == 'player':
+                self.player = Player(self, tileObject.x, tileObject.y)
+                print(tileObject.x, tileObject.y)
+            if tileObject.name == 'enemy':
+                Mob(self, tileObject.x, tileObject.y)
+            if tileObject.name == 'wall':
+                Obstacle(self, tileObject.x, tileObject.y,
+                         tileObject.width, tileObject.height)
+
         self.camera = Camera(self.map.width, self.map.height)
+        self.drawDebug = False
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -54,7 +55,7 @@ class legendsOfEldoria:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             self.update()
-            self.draw(True)
+            self.draw()
 
     def quit(self):
         pg.quit()
@@ -75,17 +76,25 @@ class legendsOfEldoria:
         for y in range(0, SCREEN_HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (SCREEN_WIDTH, y))
 
-    def draw(self, debug = False):
+    def draw(self):
 
         #self.screen.fill(BGCOLOR)
         self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
 
-        if debug: 
+        if self.drawDebug: 
             pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-            self.drawGrid()
+            #self.drawGrid()
 
         for sprite in self.allSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+            if self.drawDebug:
+                pass
+                #pg.draw.rect(self.screen, CYAN, self.camera.applyRect(sprite.hit_rect), 1)
+
+        if self.drawDebug:
+            for wall in self.walls:
+                pg.draw.rect(self.screen, CYAN, self.camera.applyRect(wall.rect), 1)
 
         # HUD
         self.player.drawPlayerHealth(self.screen, 10, 10, self.player.hp / PLAYER_HP)
@@ -96,31 +105,15 @@ class legendsOfEldoria:
     def events(self):
         # catch all events here
         for event in pg.event.get():
-            
+
             if event.type == pg.QUIT:
                 self.quit()
 
             if event.type == pg.KEYDOWN:
-                match event.key:
-                    case pg.K_ESCAPE:
-                        self.quit()
-                        break
-                    case pg.K_LEFT:
-                        self.player.direction = "left"
-                        self.player.move(dx =- self.player.speed)
-                        break
-                    case pg.K_RIGHT:
-                        self.player.direction = "right"
-                        self.player.move(dx = self.player.speed)
-                        break
-                    case pg.K_UP:
-                        self.player.direction = "up"
-                        self.player.move(dy =- self.player.speed)
-                        break
-                    case pg.K_DOWN:
-                        self.player.direction = "down"
-                        self.player.move(dy = self.player.speed)
-                        break
+                if event.key == pg.K_ESCAPE:
+                    self.quit()
+                if event.key == pg.K_DELETE:
+                    self.drawDebug = not self.drawDebug
         
         # Обновление изображения игрока
         self.player.image = self.player.PLAYER_IMAGES[self.player.direction]
