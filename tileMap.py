@@ -2,7 +2,7 @@ import pygame as pg
 import pytmx
 from gameSettings import *
 
-class Map:
+class TxtMap:
     def __init__(self, filename) -> None:
         self.data = []
 

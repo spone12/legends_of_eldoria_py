@@ -1,11 +1,13 @@
 import pygame as pg
 import sys
 from os import path
-from Classes.debug import *
 
 from tileMap import *
 from Sprites.sprites import *
 from gameSettings import *
+
+from Classes.debug import *
+from Classes.hud import *
 
 class legendsOfEldoria:
     def __init__(self):
@@ -31,6 +33,7 @@ class legendsOfEldoria:
 
         # initialize all variables and do all the setup for a new game
         self.debug = Debug(self)
+        self.hud = HUD(self)
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
@@ -38,7 +41,6 @@ class legendsOfEldoria:
         for tileObject in self.map.tmxData.objects:
             if tileObject.name == 'player':
                 self.player = Player(self, tileObject.x, tileObject.y)
-                print(tileObject.x, tileObject.y)
             if tileObject.name == 'enemy':
                 Mob(self, tileObject.x, tileObject.y)
             if tileObject.name == 'wall':
@@ -70,8 +72,7 @@ class legendsOfEldoria:
         self.camera.update(self.player, True)
 
     def draw(self):
-
-        #self.screen.fill(BGCOLOR)
+        
         self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
 
         for sprite in self.allSprites:
@@ -81,11 +82,11 @@ class legendsOfEldoria:
                 pass
 
         if self.drawDebug:
-            Debug.obstacles(self)
+            self.debug.obstacles()
             
         # HUD
-        self.player.drawPlayerHealth(self.screen, 10, 10, self.player.hp / PLAYER_HP)
-        self.player.drawPlayerMana(self.screen, 10, 35, self.player.mp / PLAYER_MP)
+        self.hud.drawPlayerHealth(self.screen, self.player.hp)
+        self.hud.drawPlayerMana(self.screen, self.player.mp)
 
         pg.display.flip()
 

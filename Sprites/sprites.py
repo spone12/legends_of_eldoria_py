@@ -48,35 +48,6 @@ class Player(pg.sprite.Sprite):
             self.direction = "down"
             self.move(dy = self.speed)
 
-    # HUD functions
-    def drawPlayerHealth(self, surface, x, y, pct):
-        
-        if pct < 0:
-            pct = 0
-
-        fill = pct * BAR_LENGTH
-        outlineRect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
-        fillRect = pg.Rect(x, y, fill, BAR_HEIGHT)
-
-        if pct > 0.6:
-            color = DARK_GREEN
-        elif pct > 0.3:
-            color = YELLOW
-        else:
-            color = RED
-
-        pg.draw.rect(surface, color, fillRect, 10, 40)
-        pg.draw.rect(surface, WHITE, outlineRect, 2, 40)
-
-    def drawPlayerMana(self, surface, x, y, pct):
-        
-        fill = pct * BAR_LENGTH
-        outlineRect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
-        fillRect = pg.Rect(x, y, fill, BAR_HEIGHT)
-
-        pg.draw.rect(surface, BLUE, fillRect, 10, 40)
-        pg.draw.rect(surface, WHITE, outlineRect, 2, 40)
-
     def move(self, dx=0, dy=0):
         if not collideWithWalls(self, self.game.walls, dx, dy):
             self.x += dx
@@ -103,7 +74,7 @@ class Mob(pg.sprite.Sprite):
         self.change_direction_counter = 0
 
         self.speed = 10  # Mob movement speed (in pixels per step)
-        self.visibility_radius = 50  #  Mob sight radius in tally
+        self.visibility_radius = 150  #  Mob sight radius in tally
         self.hp = 20
 
     def move(self, dx=0, dy=0):

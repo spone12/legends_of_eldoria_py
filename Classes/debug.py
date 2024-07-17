@@ -1,46 +1,46 @@
 import pygame as pg
 from gameSettings import *
-pg.init()
 
 class Debug():
 
 	fontSize = 20
-	fontType = pg.font.Font(None, fontSize)
-	fontColor = BLACK
+	fontColor = WHITE
 	
 	def __init__(self, game):
+		pg.init()
 		self.game = game
+		self.font = pg.font.SysFont('Arial', self.fontSize)
 
-	# text on the screen
-	def text(self, info, y = 10, x = 10) -> None:
-
-		font = pg.font.Font(None,30)
-		displaySurface = pg.display.get_surface()
-		debugSurf = font.render(str(info), True, 'White')
+	# Debug values or text on the screen
+	def text(self, info, y = 100, x = 10) -> None:
+		
+		debugSurf = self.font.render(str(info), True, WHITE)
 		debugRect = debugSurf.get_rect(topleft = (x,y))
-		pg.draw.rect(displaySurface, 'Black', debugRect)
-		displaySurface.blit(debugSurf, debugRect)
+		pg.draw.rect(self.game.screen, BLACK, debugRect)
+		self.game.screen.blit(debugSurf, debugRect)
 
-	# hit box 
+	# Hit box 
 	def hitRect(self) -> None:
 		pass
 	
-	# fps
+	# FPS
 	def fps(self):
-		pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
+		pg.display.set_caption("{:.2f}".format(self.game.clock.get_fps()))
 
 	# Render obstacles
-	def obstacles(self) -> None:
+	def obstacles(self, fps = True) -> None:
 
-		pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-		for wall in self.walls:
-			pg.draw.rect(self.screen, CYAN, self.camera.applyRect(wall.rect), 1)
+		if fps:
+			self.fps()
+
+		for wall in self.game.walls:
+			pg.draw.rect(self.game.screen, CYAN, self.game.camera.applyRect(wall.rect), 1)
 			
 	# Render grid
 	def drawGrid(self) -> None:
 
 		for x in range(0, SCREEN_WIDTH, TILESIZE):
-			pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, SCREEN_HEIGHT))
+			pg.draw.line(self.game.screen, LIGHTGREY, (x, 0), (x, SCREEN_HEIGHT))
 
 		for y in range(0, SCREEN_HEIGHT, TILESIZE):
-			pg.draw.line(self.screen, LIGHTGREY, (0, y), (SCREEN_WIDTH, y))
+			pg.draw.line(self.game.screen, LIGHTGREY, (0, y), (SCREEN_WIDTH, y))
