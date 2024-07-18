@@ -1,6 +1,7 @@
 import pygame as pg
 import pytmx
 from gameSettings import *
+from Sprites.sprites import *
 
 class TxtMap:
     def __init__(self, filename) -> None:
@@ -16,7 +17,9 @@ class TxtMap:
         self.height = self.tileHeight * TILESIZE
 
 class TiledMap:
-    def __init__(self, filename) -> None:
+    def __init__(self, game, filename) -> None:
+        self.game = game
+
         tmx = pytmx.load_pygame(filename, pixelalpha=True)
         self.width = tmx.width * tmx.tilewidth
         self.height = tmx.height * tmx.tileheight
@@ -40,6 +43,16 @@ class TiledMap:
         tempSurface = pg.Surface((self.width, self.height))
         self.render(tempSurface)
         return tempSurface
+    
+    def renderObjects(self):
+        for tileObject in self.game.map.tmxData.objects:
+            if tileObject.name == 'player':
+                self.game.player = Player(self.game, tileObject.x, tileObject.y)
+            if tileObject.name == 'enemy':
+                Mob(self.game, tileObject.x, tileObject.y)
+            if tileObject.name == 'wall':
+                Obstacle(self.game, tileObject.x, tileObject.y,
+                         tileObject.width, tileObject.height)
 
 class Camera:
     def __init__(self, width, height) -> None:

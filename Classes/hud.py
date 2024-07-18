@@ -11,10 +11,9 @@ class HUD():
     
     # Player health
     def drawPlayerHealth(self, surface, currentHp, x = 10, y = 10):
-        
+
         pct = currentHp / PLAYER_HP
-        if pct < 0:
-            pct = 0
+        pct = self.pct(pct)
 
         fill = pct * BAR_LENGTH
         outlineRect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
@@ -26,13 +25,15 @@ class HUD():
             self.font.render(
                 str(currentHp), True, WHITE
             ),
-            (x + BAR_LENGTH / 2.2, y)
+            (self.offsetValue(currentHp, x), y)
         )
 
     # Player mana
     def drawPlayerMana(self, surface, currentMana, x = 10, y = 35):
-        
+ 
         pct = currentMana / PLAYER_MP
+        pct = self.pct(pct)
+        
         fill = pct * BAR_LENGTH
         outlineRect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
         fillRect = pg.Rect(x, y, fill, BAR_HEIGHT)
@@ -43,5 +44,19 @@ class HUD():
             self.font.render(
                 str(currentMana), True, WHITE
             ),
-            (x + BAR_LENGTH / 2.1, y)
+            (self.offsetValue(currentMana, x), y)
         )
+
+    # Decimal percentage of the remaining strip
+    def pct(self, pct):
+        if pct < 0:
+            return 0
+        elif pct > 1:
+            return 1
+        else:
+            return pct
+    
+    # Value centring calculation
+    def offsetValue(self, val, x):
+        countDigits = len(str(abs(val))) / 10
+        return x + BAR_LENGTH / (2 + countDigits) 

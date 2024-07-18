@@ -25,7 +25,7 @@ class legendsOfEldoria:
         self.loadData()
 
     def loadData(self):
-        self.map = TiledMap(path.join(GAME_FOLDER, 'Maps/startLocation.tmx'))
+        self.map = TiledMap(self, path.join(GAME_FOLDER, 'Maps/startLocation.tmx'))
         self.mapImg = self.map.makeMap()
         self.mapRect = self.mapImg.get_rect()
        
@@ -37,15 +37,8 @@ class legendsOfEldoria:
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
-
-        for tileObject in self.map.tmxData.objects:
-            if tileObject.name == 'player':
-                self.player = Player(self, tileObject.x, tileObject.y)
-            if tileObject.name == 'enemy':
-                Mob(self, tileObject.x, tileObject.y)
-            if tileObject.name == 'wall':
-                Obstacle(self, tileObject.x, tileObject.y,
-                         tileObject.width, tileObject.height)
+        self.player = None
+        self.map.renderObjects()
 
         self.camera = Camera(self.map.width, self.map.height)
         self.drawDebug = False

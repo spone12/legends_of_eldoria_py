@@ -3,7 +3,7 @@ from gameSettings import *
 
 class Debug():
 
-	fontSize = 20
+	fontSize = 18
 	fontColor = WHITE
 	
 	def __init__(self, game):
@@ -25,7 +25,7 @@ class Debug():
 	
 	# FPS
 	def fps(self):
-		pg.display.set_caption("{:.2f}".format(self.game.clock.get_fps()))
+		self.text("{:.2f}".format(self.game.clock.get_fps()), 10, SCREEN_WIDTH - 50)
 
 	# Render obstacles
 	def obstacles(self, fps = True) -> None:
