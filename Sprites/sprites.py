@@ -34,7 +34,7 @@ class Player(pg.sprite.Sprite):
         self.lvl = PLAYER_LVL
         self.speed = 3
 
-    def get_keys(self):
+    def keyPressButtons(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.direction = "left"
@@ -48,6 +48,9 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.direction = "down"
             self.move(dy = self.speed)
+        
+        # Updating the player's image
+        self.image = self.PLAYER_IMAGES[self.direction]
 
     def move(self, dx=0, dy=0):
         if not collideWithWalls(self, self.game.walls, dx, dy):
@@ -55,7 +58,7 @@ class Player(pg.sprite.Sprite):
             self.y += dy
 
     def update(self):
-        self.get_keys()
+        self.keyPressButtons()
         self.rect.x = self.x #* TILESIZE
         self.rect.y = self.y #* TILESIZE
 

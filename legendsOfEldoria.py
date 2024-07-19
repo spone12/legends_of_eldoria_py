@@ -8,8 +8,12 @@ from gameSettings import *
 
 from Classes.debug import *
 from Classes.hud import *
+from Classes.selectionDialogWindow import *
 
-class legendsOfEldoria:
+class LegendsOfEldoria:
+
+    isDialogWindow = False
+
     def __init__(self):
         # Initialization
         pg.init()
@@ -29,18 +33,25 @@ class legendsOfEldoria:
         self.mapImg = self.map.makeMap()
         self.mapRect = self.mapImg.get_rect()
        
+    # Initialize all variables and do all the setup for a new game
     def newGame(self):
 
-        # initialize all variables and do all the setup for a new game
+        # Classes 
         self.debug = Debug(self)
         self.hud = HUD(self)
+        self.dialogWindow = SelectionDialogWindow(self)
+
+        # Sprites
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.player = None
-        self.map.renderObjects()
 
+        # Map
+        self.map.renderObjects()
         self.camera = Camera(self.map.width, self.map.height)
+
+        # Variables
         self.drawDebug = False
 
     def run(self):
@@ -59,32 +70,39 @@ class legendsOfEldoria:
 
     def update(self):
         # update portion of the game loop
-        #self.allSprites.update()
-        self.player.update()
-        self.mobs.update(self.player)
-        self.camera.update(self.player, True)
+        if self.isDialogWindow:
+            self.dialogWindow.update()
+        else:
+            #self.allSprites.update()
+            self.player.update()
+            self.mobs.update(self.player)
+            self.camera.update(self.player, True)
 
     def draw(self):
-        
-        self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
 
-        for sprite in self.allSprites:
-            self.screen.blit(sprite.image, self.camera.apply(sprite))
+        if self.isDialogWindow:
+            self.dialogWindow.window(['act1', 'act2', 'act3', 'act4'])
+        else:
+            self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
+
+            for sprite in self.allSprites:
+                self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+                if self.drawDebug:
+                    pass
 
             if self.drawDebug:
-                pass
-
-        if self.drawDebug:
-            self.debug.obstacles()
-            
-        # HUD
-        self.hud.drawPlayerHealth(self.screen, self.player.hp)
-        self.hud.drawPlayerMana(self.screen, self.player.mp)
+                self.debug.obstacles()
+                
+            # HUD
+            self.hud.drawPlayerHealth(self.screen, self.player.hp)
+            self.hud.drawPlayerMana(self.screen, self.player.mp)
 
         pg.display.flip()
 
+    # Catch all events here
     def events(self):
-        # catch all events here
+
         for event in pg.event.get():
 
             if event.type == pg.QUIT:
@@ -93,11 +111,9 @@ class legendsOfEldoria:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
-                if event.key == pg.K_F1:
+                elif event.key == pg.K_F1:
                     self.drawDebug = not self.drawDebug
-        
-        # Обновление изображения игрока
-        self.player.image = self.player.PLAYER_IMAGES[self.player.direction]
+                    self.isDialogWindow = not self.isDialogWindow
 
     def showStartScreen(self):
         pass
@@ -105,7 +121,7 @@ class legendsOfEldoria:
     def showGoScreen(self):
         pass
 
-game = legendsOfEldoria()
+game = LegendsOfEldoria()
 game.showStartScreen()
 
 while True:
