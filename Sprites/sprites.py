@@ -25,6 +25,7 @@ class Player(pg.sprite.Sprite):
         self.direction = 'up'
         self.image = self.PLAYER_IMAGES[self.direction]
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.x = x
         self.y = y
 
@@ -68,6 +69,7 @@ class Mob(pg.sprite.Sprite):
         self.last_update = pg.time.get_ticks()  # Latest update time
         
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.x = x
         self.y = y
         self.direction = random.choice(['left', 'right', 'up', 'down'])
