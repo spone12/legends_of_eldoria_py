@@ -113,6 +113,7 @@ class LegendsOfEldoria:
                     self.quit()
                 elif event.key == pg.K_F1:
                     self.drawDebug = not self.drawDebug
+                elif event.key == pg.K_e:
                     self.isDialogWindow = not self.isDialogWindow
 
     def showStartScreen(self):

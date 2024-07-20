@@ -69,17 +69,15 @@ class Mob(pg.sprite.Sprite):
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
         self.image.fill(YELLOW)
-        self.last_update = pg.time.get_ticks()  # Latest update time
         
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.startingPos = (x, y)
         self.x = x
         self.y = y
-        self.direction = random.choice(['left', 'right', 'up', 'down'])
-        self.change_direction_counter = 0
 
-        self.speed = 10  # Mob movement speed (in pixels per step)
-        self.visibility_radius = 150  #  Mob sight radius in tally
+        self.speed = 1  # Mob movement speed
+        self.visibility_radius = 300  # Mob sight radius in tally
         self.hp = 20
 
     def move(self, dx=0, dy=0):
@@ -92,66 +90,25 @@ class Mob(pg.sprite.Sprite):
         return distance <= self.visibility_radius
 
     def update(self, player):
-        now = pg.time.get_ticks()
-        if now - self.last_update > 100:  # update every 500 ms
-            self.last_update = now
-
-            if self.can_see_player(player):
-                dx, dy = 0, 0
-                if self.x < player.x:
-                    dx = 1
-                elif self.x > player.x:
-                    dx = -1
-                if self.y < player.y:
-                    dy = 1
-                elif self.y > player.y:
-                    dy = -1
-
-                if dx != 0 and not collideWithWalls(self, self.game.walls, dx, 0):
-                    self.move(dx=dx)
-                elif dy != 0 and not collideWithWalls(self, self.game.walls, 0, dy):
-                    self.move(dy=dy)
-                else:
-                    self.avoid_obstacle(dx, dy)
-            else:
-                self.random_move()
-
-            if pg.sprite.collide_rect(self, player):
-                self.handle_collision(player)
-
-            self.rect.x = self.x #* TILESIZE
-            self.rect.y = self.y #* TILESIZE
-
-    def avoid_obstacle(self, dx, dy):
-        # Алгоритм обхода препятствий
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]  # Directions: right, left, down, up
-        random.shuffle(directions)  # Shuffle directions for randomized traversal
-        for direction in directions:
-            new_dx, new_dy = direction
-            if not collideWithWalls(self, self.game.walls, new_dx, new_dy):
-                self.move(dx=new_dx, dy=new_dy)
-                break
-
-    def random_move(self):
-        if self.change_direction_counter == 0:
-            self.direction = random.choice(['left', 'right', 'up', 'down'])
-            self.change_direction_counter = 60
-
-        if self.direction == 'left' and not collideWithWalls(self, self.game.walls, -1, 0):
-            self.move(dx=-1)
-        elif self.direction == 'right' and not collideWithWalls(self, self.game.walls, 1, 0):
-            self.move(dx=1)
-        elif self.direction == 'up' and not collideWithWalls(self, self.game.walls, 0, -1):
-            self.move(dy=-1)
-        elif self.direction == 'down' and not collideWithWalls(self, self.game.walls, 0, 1):
-            self.move(dy=1)
+        if self.can_see_player(player):
+            direction_vector = pg.math.Vector2(player.x - self.x, player.y - self.y).normalize()
+            self.move(direction_vector.x, direction_vector.y)
         else:
-            self.change_direction_counter = 0  # Forced to change direction if it hits a wall
-
-        self.change_direction_counter -= 1
-
+            self.return_to_starting_pos()
+        
+        if pg.sprite.collide_rect(self, player):
+                self.handle_collision(player)
+                
+        self.rect.x = self.x
+        self.rect.y = self.y
+        
     def handle_collision(self, player):
         print("Collision with a player!")
+        
+    def return_to_starting_pos(self):
+        if (self.x, self.y) != self.startingPos:
+            direction_vector = pg.math.Vector2(self.startingPos[0] - self.x, self.startingPos[1] - self.y).normalize()
+            self.move(direction_vector.x, direction_vector.y)
 
 class Obstacle(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height):
