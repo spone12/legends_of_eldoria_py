@@ -32,11 +32,15 @@ class TiledMap:
         return tempSurface
     
     def renderObjects(self):
+        
         for tileObject in self.game.map.tmxData.objects:
+            objCenter = pg.math.Vector2(tileObject.x + tileObject.width / 2,
+                        tileObject.y + tileObject.height / 2)
+            
             if tileObject.name == 'player':
-                self.game.player = Player(self.game, tileObject.x, tileObject.y)
+                self.game.player = Player(self.game, objCenter.x, objCenter.y)
             if tileObject.name == 'enemy':
-                Mob(self.game, tileObject.x, tileObject.y)
+                Mob(self.game, objCenter.x, objCenter.y)
             if tileObject.name == 'wall':
                 Obstacle(self.game, tileObject.x, tileObject.y,
                          tileObject.width, tileObject.height)

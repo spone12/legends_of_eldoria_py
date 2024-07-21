@@ -45,6 +45,7 @@ class LegendsOfEldoria:
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
+        self.items = pg.sprite.Group()
         self.player = None
 
         # Map
