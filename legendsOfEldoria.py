@@ -110,12 +110,13 @@ class LegendsOfEldoria:
                 self.quit()
 
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
+                if event.key == pg.K_ESCAPE and not self.isDialogWindow:
                     self.quit()
                 elif event.key == pg.K_F1:
                     self.drawDebug = not self.drawDebug
                 elif event.key == pg.K_e:
                     self.isDialogWindow = not self.isDialogWindow
+                    self.dialogWindow.menuReset()
 
     def showStartScreen(self):
         pass
