@@ -47,6 +47,7 @@ class LegendsOfEldoria:
         self.mobs = pg.sprite.Group()
         self.items = pg.sprite.Group()
         self.player = None
+        self.mapObjects = {'randomChest': []}
 
         # Map
         self.map.renderObjects()
@@ -110,13 +111,18 @@ class LegendsOfEldoria:
                 self.quit()
 
             if event.type == pg.KEYDOWN:
+                # Quit game
                 if event.key == pg.K_ESCAPE and not self.isDialogWindow:
                     self.quit()
+                # Debug
                 elif event.key == pg.K_F1:
                     self.drawDebug = not self.drawDebug
+                # Action open any
                 elif event.key == pg.K_e:
-                    self.isDialogWindow = not self.isDialogWindow
-                    self.dialogWindow.menuReset()
+                    self.dialogWindow.checkOpenWindow(OPEN)
+                # Open inventory
+                elif event.key == pg.K_i:
+                    self.dialogWindow.checkOpenWindow(INVENTORY_OPEN)
 
     def showStartScreen(self):
         pass

@@ -27,10 +27,10 @@ class TiledMap:
                         )
     
     def makeMap(self):
-        tempSurface = pg.Surface((self.width, self.height))
-        self.render(tempSurface)
-        return tempSurface
-    
+        mapSurface = pg.Surface((self.width, self.height))
+        self.render(mapSurface)
+        return mapSurface
+     
     def renderObjects(self):
         
         for tileObject in self.game.map.tmxData.objects:
@@ -39,8 +39,22 @@ class TiledMap:
             
             if tileObject.name == 'player':
                 self.game.player = Player(self.game, objCenter.x, objCenter.y)
+
             if tileObject.name == 'enemy':
                 Mob(self.game, objCenter.x, objCenter.y)
+
+            if tileObject.name == 'randomChest':
+
+                Obstacle(self.game, tileObject.x, tileObject.y,
+                         tileObject.width, tileObject.height)
+                
+                # Append chest position
+                self.game.mapObjects['randomChest'].append(
+                    pg.Vector2(
+                        pg.Rect(tileObject.x, tileObject.y, tileObject.width, tileObject.height).center
+                    )
+                )
+
             if tileObject.name == 'wall':
                 Obstacle(self.game, tileObject.x, tileObject.y,
                          tileObject.width, tileObject.height)

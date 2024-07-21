@@ -1,3 +1,4 @@
+import math
 import pygame as pg
 from gameSettings import *
 
@@ -75,6 +76,20 @@ class SelectionDialogWindow():
         if now - self.last_update > 80:
             self.last_update = now
             self.keyPressButtons()
+
+    def checkOpenWindow(self, type):
+
+        if type == INVENTORY_OPEN:
+            self.game.isDialogWindow = not self.game.isDialogWindow
+            self.menuReset()
+            return True
+        
+        # Check open 
+        elif type == OPEN:
+
+            for pos in self.game.mapObjects['randomChest']:
+                if pg.Vector2(self.game.player.rect.center).distance_to(pos) < 30:
+                    print(True)
     
     def menuReset(self) -> None:
         self.currentAction = 0
