@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from os import path
 
-from tileMap import *
+from Classes.tileMap import *
 from Sprites.sprites import *
 from gameSettings import *
 
@@ -45,7 +45,6 @@ class LegendsOfEldoria:
         self.allSprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
-        self.items = pg.sprite.Group()
         self.player = None
         self.mapObjects = {'randomChest': []}
 

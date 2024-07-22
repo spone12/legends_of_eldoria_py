@@ -5,7 +5,7 @@ from gameSettings import *
 class SelectionDialogWindow():
     fontSize = 36
     fontColor = WHITE
-    menuActions = ['Take']
+    menuActions = ['Take', 'fwfew']
     
     def __init__(self, game):
 
@@ -87,8 +87,9 @@ class SelectionDialogWindow():
         # Check open 
         elif type == OPEN:
 
-            for pos in self.game.mapObjects['randomChest']:
-                if pg.Vector2(self.game.player.rect.center).distance_to(pos) < 30:
+            playerPos = pg.Vector2(self.game.player.rect.center)
+            for chestObj in self.game.mapObjects['randomChest']:
+                if playerPos.distance_to(chestObj.pos) < 30:
                     print(True)
     
     def menuReset(self) -> None:

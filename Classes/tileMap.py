@@ -2,6 +2,7 @@ import pygame as pg
 import pytmx
 from gameSettings import *
 from Sprites.sprites import *
+from Classes.Items.Chest import *
 
 class TiledMap:
     def __init__(self, game, filename) -> None:
@@ -50,8 +51,11 @@ class TiledMap:
                 
                 # Append chest position
                 self.game.mapObjects['randomChest'].append(
-                    pg.Vector2(
-                        pg.Rect(tileObject.x, tileObject.y, tileObject.width, tileObject.height).center
+                    Chest(
+                        self.game, 
+                        pg.Vector2(
+                            pg.Rect(tileObject.x, tileObject.y, tileObject.width, tileObject.height).center
+                        )
                     )
                 )
 

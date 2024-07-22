@@ -1,0 +1,27 @@
+{
+  "poisons": {
+    "hp": {
+      "large": {
+        "health": 100
+      },
+      "medium": {
+        "health": 50
+      },
+      "small": {
+        "health": 15
+      }
+    },
+   "mana": {
+    "large": {
+      "health": 100
+    },
+    "medium": {
+      "health": 50
+    },
+    "small": {
+      "health": 15
+    }
+  }
+  }
+  
+}
