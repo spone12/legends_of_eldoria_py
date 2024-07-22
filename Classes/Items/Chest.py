@@ -7,4 +7,4 @@ class Chest():
     def __init__(self, game, pos):
         self.game = game
         self.pos = pos
-        self.items = JsonImport(self.game, path.join(GAME_FOLDER, 'JsonData/items.json'))
+        #self.items = JsonImport(self.game, path.join(GAME_FOLDER, 'JsonData/items.json'))

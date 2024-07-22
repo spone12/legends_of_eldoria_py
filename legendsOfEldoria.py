@@ -6,6 +6,7 @@ from Classes.tileMap import *
 from Sprites.sprites import *
 from gameSettings import *
 
+from Classes.db import *
 from Classes.debug import *
 from Classes.hud import *
 from Classes.selectionDialogWindow import *
@@ -32,6 +33,7 @@ class LegendsOfEldoria:
         self.map = TiledMap(self, path.join(GAME_FOLDER, 'Maps/startLocation.tmx'))
         self.mapImg = self.map.makeMap()
         self.mapRect = self.mapImg.get_rect()
+        self.db = DB()
        
     # Initialize all variables and do all the setup for a new game
     def newGame(self):

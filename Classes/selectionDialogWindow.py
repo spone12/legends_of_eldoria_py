@@ -5,7 +5,7 @@ from gameSettings import *
 class SelectionDialogWindow():
     fontSize = 36
     fontColor = WHITE
-    menuActions = ['Take', 'fwfew']
+    menuActions = ['Take', 'Test']
     
     def __init__(self, game):
 

@@ -1,0 +1,3 @@
+type,name,data
+poison,hp100,"{""hp"":100}"
+poison,hp50,"{""hp"":50}"

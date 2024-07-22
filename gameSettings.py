@@ -19,6 +19,7 @@ GRID_HEIGHT = SCREEN_HEIGHT / TILESIZE
 # Folders
 GAME_FOLDER = path.dirname(__file__)
 IMG_FOLDER = path.join(GAME_FOLDER, 'Images')
+IMPORT_FOLDER = path.join(GAME_FOLDER, 'Import/csv/')
 
 # Actions
 OPEN = 'OPEN'
