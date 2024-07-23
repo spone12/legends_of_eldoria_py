@@ -84,7 +84,7 @@ class LegendsOfEldoria:
     def draw(self):
 
         if self.isDialogWindow:
-            self.dialogWindow.window(['act1', 'act2', 'act3', 'act4'])
+            self.dialogWindow.openWindow()
         else:
             self.screen.blit(self.mapImg, self.camera.applyRect(self.mapRect))
 

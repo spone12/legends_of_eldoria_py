@@ -5,7 +5,7 @@ from gameSettings import *
 class SelectionDialogWindow():
     fontSize = 36
     fontColor = WHITE
-    menuActions = ['Take', 'Test']
+    menuActions = []
     
     def __init__(self, game):
 
@@ -17,6 +17,9 @@ class SelectionDialogWindow():
         self.currentAction = 0
         self.activeAction = 0
         self.isUpperMenuActive = True  # Flag to track the active menu
+
+    def openWindow(self):
+        self.window(self.actions)
 
     # Debug values or text on the screen
     def window(self, actions) -> None:
@@ -79,20 +82,32 @@ class SelectionDialogWindow():
 
     def checkOpenWindow(self, type):
 
+        self.menuReset()
+        isOpenWindow = False
+
         if type == INVENTORY_OPEN:
-            self.game.isDialogWindow = not self.game.isDialogWindow
-            self.menuReset()
-            return True
+            isOpenWindow =  True
+            self.actions.append('Empty')
+            self.menuActions = ['Drop']
         
         # Check open 
         elif type == OPEN:
-
+            
             playerPos = pg.Vector2(self.game.player.rect.center)
             for chestObj in self.game.mapObjects['randomChest']:
                 if playerPos.distance_to(chestObj.pos) < 30:
-                    print(True)
+                    isOpenWindow = True
+                    self.menuActions = ['Take', 'TakeAll']
+                    for item in chestObj.items:
+                        self.actions.append(item.name)
+
+        if isOpenWindow:
+            self.game.isDialogWindow = not self.game.isDialogWindow
     
     def menuReset(self) -> None:
+        self.actions = []
+        self.menuActions.clear()
         self.currentAction = 0
         self.activeAction = 0
         self.isUpperMenuActive = True
+        

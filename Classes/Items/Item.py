@@ -7,6 +7,7 @@ class Item():
 
         self.game = game
         data = json.loads(data)
+        self.itemKeys = data.keys()
         
         # Establish the properties of objects
         for k, v in data.items():
@@ -14,4 +15,10 @@ class Item():
 
         # self.image = pg.Surface()
 
+    def getItemProperties(self):
+        for key in self.itemKeys:
+            print(self.prop(key))
+
+    def prop(self, prop):
+        return getattr(self, prop)
         
