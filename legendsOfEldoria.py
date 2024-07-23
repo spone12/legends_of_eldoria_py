@@ -9,7 +9,7 @@ from gameSettings import *
 from Classes.db import *
 from Classes.debug import *
 from Classes.hud import *
-from Classes.selectionDialogWindow import *
+from Classes.selectionMenuWindow import *
 
 class LegendsOfEldoria:
 
@@ -41,7 +41,7 @@ class LegendsOfEldoria:
         # Classes 
         self.debug = Debug(self)
         self.hud = HUD(self)
-        self.dialogWindow = SelectionDialogWindow(self)
+        self.dialogWindow = SelectionMenuWindow(self)
 
         # Sprites
         self.allSprites = pg.sprite.Group()

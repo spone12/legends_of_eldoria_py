@@ -10,7 +10,7 @@ class Chest():
         self.pos = pos
         self.items = []
         self.maxDropItems = random.randint(0, 2)
-        self.dropItems()
+        self.isGeneratedItems = False
 
     def dropItems(self):
 
@@ -29,3 +29,5 @@ class Chest():
 
         if len(self.items) == 0:
             self.items.append(EmptyItem(self.game))
+        
+        self.isGeneratedItems = True

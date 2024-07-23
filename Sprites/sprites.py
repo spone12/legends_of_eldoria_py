@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 from gameSettings import *
+from Classes.Items.Inventory import *
 
 def collideWithWalls(sprite, group, dx=0, dy=0):
     sprite.rect.x += dx #* TILESIZE
@@ -15,6 +16,7 @@ class Player(pg.sprite.Sprite):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        self.inventory = Inventory(self.game)
 
         self.PLAYER_IMAGES = {
             "up": pg.image.load(path.join(IMG_FOLDER, "Player/up.png")).convert_alpha(),
