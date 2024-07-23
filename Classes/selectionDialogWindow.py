@@ -88,7 +88,7 @@ class SelectionDialogWindow():
         if type == INVENTORY_OPEN:
             isOpenWindow =  True
             self.actions.append('Empty')
-            self.menuActions = ['Drop']
+            self.menuActions = ['Use', 'Drop']
         
         # Check open 
         elif type == OPEN:
@@ -110,4 +110,3 @@ class SelectionDialogWindow():
         self.currentAction = 0
         self.activeAction = 0
         self.isUpperMenuActive = True
-        

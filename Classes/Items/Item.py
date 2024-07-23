@@ -21,4 +21,9 @@ class Item():
 
     def prop(self, prop):
         return getattr(self, prop)
-        
+
+class EmptyItem():
+    def __init__(self, game):
+
+        self.game = game
+        self.name = 'Empty'

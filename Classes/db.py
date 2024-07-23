@@ -65,7 +65,7 @@ class DB():
         except Exception as err:
             Logger().log(self.__class__.__name__, f"Import error: {err}")
 
-    def get(self, table = 'items', where = None, values = None, limit = None):
+    def get(self, table = 'items', where = None, values = None, random = False, limit = None):
         """
             Get saved translated rows
         """
@@ -76,6 +76,9 @@ class DB():
             if where is not None:
                 sql += " WHERE " + where
             
+            if random:
+                sql += " ORDER BY RANDOM() "
+
             if limit is not None:
                 sql += " LIMIT " + str(limit)
 
