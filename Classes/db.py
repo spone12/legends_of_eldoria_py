@@ -31,7 +31,7 @@ class DB():
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ''')
-            self.importDataToTable('items.csv')
+        self.importDataToTable('items.csv')
 
 
     def checkIfTableExists(self, table):
@@ -44,16 +44,18 @@ class DB():
         else:
             return True
 
-    def importDataToTable(self, file):
+    def importDataToTable(self, fileName):
         try:
-            with open(path.join(IMPORT_FOLDER, file), 'r') as fin:
+
+            with open(path.join(IMPORT_FOLDER, fileName), 'r') as file:
                 
                 # csv.DictReader
-                dr = csv.DictReader(fin)
-                for i in dr:
-                    toDB = [(item['name'], item['type'], item['data']) for item in dr]
-
-                self.curs.executemany("INSERT INTO items (name, type, data) VALUES (?, ?, ?);", toDB)
+                reader = csv.DictReader(file)
+                for row in reader:
+                    self.curs.execute('''
+                        INSERT INTO items (name, type, data)
+                        VALUES (:name, :type, :data);
+                    ''', row)
                 self.conn.commit()
 
         except Exception as err:
