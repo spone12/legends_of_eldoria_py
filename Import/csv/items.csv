@@ -1,3 +1,7 @@
 type,name,data
-poison,hp100,"{""hp"":100}"
-poison,hp50,"{""hp"":50}"
+poison,hp100,"{""name"":""hp100"",""hp"":100,""dropChance"":10}"
+poison,hp50,"{""name"":""hp50"",""hp"":50,""dropChance"":25}"
+poison,hp15,"{""name"":""hp15"",""hp"":15,""dropChance"":40}"
+poison,mp100,"{""name"":""mp100"",""mp"":100,""dropChance"":10}"
+poison,mp50,"{""name"":""mp50"",""mp"":50,""dropChance"":25}"
+poison,mp15,"{""name"":""mp15"",""mp"":15,""dropChance"":40}"

@@ -31,7 +31,11 @@ class DB():
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ''')
-        self.importDataToTable('items.csv')
+            self.curs.execute('''
+                CREATE UNIQUE INDEX IF NOT EXISTS items_uniq_name
+                ON items(name)
+            ''')
+            self.importDataToTable('items.csv')
 
 
     def checkIfTableExists(self, table):
@@ -61,19 +65,7 @@ class DB():
         except Exception as err:
             Logger().log(self.__class__.__name__, f"Import error: {err}")
 
-    def checkTableExists(self, tablename):
-
-        self.curs.execute("""
-            SELECT COUNT(*)
-            FROM information_schema.tables
-            WHERE table_name = '{0}'
-            """.format(tablename.replace('\'', '\'\'')))
-        if self.curs.fetchone()[0] == 1:
-            return True
-
-        return False
-
-    def get(self, table = 'Items', where = None, values = None):
+    def get(self, table = 'items', where = None, values = None, limit = None):
         """
             Get saved translated rows
         """
@@ -83,11 +75,19 @@ class DB():
             
             if where is not None:
                 sql += " WHERE " + where
+            
+            if limit is not None:
+                sql += " LIMIT " + str(limit)
 
             self.curs.execute(sql)
-            return self.curs.fetchall()
+            return self.zipResultWithColumnNames()
         except Exception as err:
             Logger().log(self.__class__.__name__, f"Select error: {err}")
+    
+    def zipResultWithColumnNames(self):
+        columnNames = [description[0] for description in self.curs.description]
+        rows = self.curs.fetchall()
+        return [dict(zip(columnNames, row)) for row in rows]
 
     def insert(self, table, fields, values) -> None:
         """

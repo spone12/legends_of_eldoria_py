@@ -1,10 +1,13 @@
 import pygame as pg
 from gameSettings import *
-from Classes.Items.Items import *
-from Classes.Items.jsonImport import *
+from Classes.Items.Item import *
 
 class Chest():
     def __init__(self, game, pos):
         self.game = game
         self.pos = pos
-        #self.items = JsonImport(self.game, path.join(GAME_FOLDER, 'JsonData/items.json'))
+        self.items = []
+
+        itemsData = self.game.db.get('items', limit = 2)
+        for item in itemsData:
+            self.items.append(Item(self.game, item['data']))
