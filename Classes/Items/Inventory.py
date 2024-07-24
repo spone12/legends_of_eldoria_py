@@ -32,6 +32,7 @@ class Inventory():
 
     def getItems(self):
         ''' Get all inventory items '''
+        
         return self.items
 
     def getItemsByAttr(self, attr = 'name'): 

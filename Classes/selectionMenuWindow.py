@@ -15,8 +15,9 @@ class SelectionMenuWindow():
         self.last_update = pg.time.get_ticks()  # Latest update time
 
         self.type = INVENTORY_OPEN
-        self.obj = []
+        self.mapObjName = []
         self.actions = []
+        self.menuObjects = []
         self.currentAction = 0
         self.activeAction = 0
         self.isUpperMenuActive = True  # Flag to track the active menu
@@ -55,6 +56,13 @@ class SelectionMenuWindow():
             
             self.screenText(text, LIGHTGREY, 50, 30)
 
+            # Render item image
+            self.game.screen.blit(self.menuObjects[self.activeAction].image, (SCREEN_WIDTH - 250, 150))
+
+            # Render item effects
+            for effect in self.menuObjects[self.activeAction].itemEffectActionTranscription():
+                self.screenText(effect, self.fontColor, SCREEN_WIDTH - 350, 250 + i * 40)
+            
     def screenText(self, text, color: str, x: int, y: int):
         ''' Render elements on window '''
 
@@ -72,8 +80,10 @@ class SelectionMenuWindow():
         if self.isUpperMenuActive:
             if keys[pg.K_UP] or keys[pg.K_w]:
                 self.currentAction = (self.currentAction - 1) % len(self.actions)
+                self.activeAction = self.currentAction
             elif keys[pg.K_DOWN] or keys[pg.K_s]:
                 self.currentAction = (self.currentAction + 1) % len(self.actions)
+                self.activeAction = self.currentAction
             elif keys[pg.K_RETURN]:
                 self.isUpperMenuActive = False  # Switching to the bottom menu
                 self.activeAction = self.currentAction
@@ -104,15 +114,15 @@ class SelectionMenuWindow():
             action = self.menuActions[self.currentAction]
             if self.type == OPEN:
 
-                if self.obj == []:
+                if self.mapObjName == []:
                     return False
                 
                 if action == 'Take':
-                    self.game.player.inventory.addItems(self.obj, self.activeAction)
+                    self.game.player.inventory.addItems(self.mapObjName, self.activeAction)
                     self.checkOpenWindow(OPEN)
                     self.game.isDialogWindow = True
                 if action == 'TakeAll':
-                    self.game.player.inventory.addItems(self.obj)
+                    self.game.player.inventory.addItems(self.mapObjName)
                     self.game.isDialogWindow = False
 
             # Inventory        
@@ -145,6 +155,7 @@ class SelectionMenuWindow():
             isOpenWindow =  True
             if len(self.game.player.inventory.items) > 0:
                 self.actions = self.game.player.inventory.getItemsByAttr('name')
+                self.menuObjects = self.game.player.inventory.getItems()
 
             self.menuActions = ['Use', 'Drop']
         
@@ -153,17 +164,18 @@ class SelectionMenuWindow():
 
             playerPos = pg.Vector2(self.game.player.rect.center)
             for i, chestObj in enumerate(self.game.mapObjects['randomChest']):
-                if playerPos.distance_to(chestObj.pos) < 3000:
+                if playerPos.distance_to(chestObj.pos) < 30:
 
                     if not chestObj.isGeneratedItems:
                         chestObj.dropItems()
                     
                     isOpenWindow = True
                     self.menuActions = ['Take', 'TakeAll']
-                    self.obj = ['randomChest']
+                    self.mapObjName = ['randomChest']
 
                     for item in chestObj.items:
                         self.actions.append(item.name)
+                        self.menuObjects.append(item)
 
         if isOpenWindow:
             self.game.isDialogWindow = not self.game.isDialogWindow
@@ -176,4 +188,5 @@ class SelectionMenuWindow():
         self.currentAction = 0
         self.activeAction = 0
         self.isUpperMenuActive = True
-        self.obj = []
+        self.mapObjName = []
+        self.menuObjects = []
