@@ -1,5 +1,5 @@
 import sqlite3, csv
-from Classes.logger import *
+from Classes.Debug.logger import *
 from gameSettings import *
 
 class DB():

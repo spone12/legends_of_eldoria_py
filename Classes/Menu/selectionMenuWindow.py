@@ -16,7 +16,6 @@ class SelectionMenuWindow():
 
         self.type = INVENTORY_OPEN
         self.mapObjName = []
-        self.actions = []
         self.menuObjects = []
         self.currentAction = 0
         self.activeAction = 0
@@ -25,12 +24,11 @@ class SelectionMenuWindow():
     def openWindow(self):
         ''' Open window '''
 
-        self.window(self.actions)
+        self.window()
 
-    def window(self, actions) -> None:
+    def window(self) -> None:
         ''' Rendering of window elements '''
 
-        self.actions = actions
         self.game.screen.fill(BLACK)
 
         if self.type == INVENTORY_OPEN:
@@ -38,16 +36,16 @@ class SelectionMenuWindow():
         else:
             text = 'CHEST'
 
-        if len(self.actions) == 0:
+        if len(self.menuObjects) == 0:
            self.screenText(text + ' EMPTY', LIGHTGREY, 50, 30)      
         else:
             # Top menu
-            for i, action in enumerate(actions):
+            for i, object in enumerate(self.menuObjects):
                 color = LIGHTGREY
                 if (self.isUpperMenuActive and i == self.currentAction) or (not self.isUpperMenuActive and i == self.activeAction):
                     color = self.fontColor
                 
-                self.screenText(action, color, 100, 100 + i * 40)
+                self.screenText(object.name, color, 100, 100 + i * 40)
 
             # Bottom menu
             for i, action in enumerate(self.menuActions):
@@ -74,15 +72,15 @@ class SelectionMenuWindow():
         
         keys = pg.key.get_pressed()
 
-        if len(self.actions) == 0 and not keys[pg.K_ESCAPE]:
+        if len(self.menuObjects) == 0 and not keys[pg.K_ESCAPE]:
             return False
         
         if self.isUpperMenuActive:
             if keys[pg.K_UP] or keys[pg.K_w]:
-                self.currentAction = (self.currentAction - 1) % len(self.actions)
+                self.currentAction = (self.currentAction - 1) % len(self.menuObjects)
                 self.activeAction = self.currentAction
             elif keys[pg.K_DOWN] or keys[pg.K_s]:
-                self.currentAction = (self.currentAction + 1) % len(self.actions)
+                self.currentAction = (self.currentAction + 1) % len(self.menuObjects)
                 self.activeAction = self.currentAction
             elif keys[pg.K_RETURN]:
                 self.isUpperMenuActive = False  # Switching to the bottom menu
@@ -154,7 +152,6 @@ class SelectionMenuWindow():
         if type == INVENTORY_OPEN:
             isOpenWindow =  True
             if len(self.game.player.inventory.items) > 0:
-                self.actions = self.game.player.inventory.getItemsByAttr('name')
                 self.menuObjects = self.game.player.inventory.getItems()
 
             self.menuActions = ['Use', 'Drop']
@@ -174,7 +171,6 @@ class SelectionMenuWindow():
                     self.mapObjName = ['randomChest']
 
                     for item in chestObj.items:
-                        self.actions.append(item.name)
                         self.menuObjects.append(item)
 
         if isOpenWindow:
@@ -183,7 +179,6 @@ class SelectionMenuWindow():
     def menuReset(self) -> None:
         ''' Reset properties '''
 
-        self.actions = []
         self.menuActions.clear()
         self.currentAction = 0
         self.activeAction = 0

@@ -1,7 +1,7 @@
 import pygame as pg
 import random
 from gameSettings import *
-from Classes.Items.Inventory import *
+from Classes.Menu.Inventory import *
 
 def collideWithWalls(sprite, group, dx=0, dy=0):
     sprite.rect.x += dx #* TILESIZE
@@ -31,7 +31,7 @@ class Player(pg.sprite.Sprite):
         self.x = x
         self.y = y
 
-        self.hp = PLAYER_HP 
+        self.hp = PLAYER_HP
         self.mp = PLAYER_MP
         self.lvl = PLAYER_LVL
         self.speed = 3

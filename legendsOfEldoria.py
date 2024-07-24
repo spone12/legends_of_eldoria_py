@@ -6,10 +6,10 @@ from Classes.tileMap import *
 from Sprites.sprites import *
 from gameSettings import *
 
-from Classes.db import *
-from Classes.debug import *
-from Classes.hud import *
-from Classes.selectionMenuWindow import *
+from Classes.DB.db import *
+from Classes.Debug.debug import *
+from Classes.Menu.hud import *
+from Classes.Menu.selectionMenuWindow import *
 
 class LegendsOfEldoria:
 
