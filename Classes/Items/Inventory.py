@@ -12,7 +12,7 @@ class Inventory():
     
     def addItems(self, obj, itemId = None):
         ''' Add items to Inventory'''
-        
+
         if itemId != None:
             for nameObj in obj:
                 for objI, name in enumerate(self.game.mapObjects[nameObj]):
@@ -38,3 +38,23 @@ class Inventory():
         ''' Get values inventory items by attribute '''
 
         return [getattr(item, attr) for item in self.items]
+    
+    def dropItem(self, itemId: int):
+        ''' Drop item by index '''
+
+        for i, item in enumerate(self.items):
+            if i == itemId:
+                del self.items[itemId]
+                return True
+        return False
+
+    def useItem(self, itemId):
+        ''' Use Item by index '''
+
+        for i, item in enumerate(self.items):
+            if i == itemId:
+                item.useItem()
+                del self.items[itemId]
+                return True
+        return False
+        

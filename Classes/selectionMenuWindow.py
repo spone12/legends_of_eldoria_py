@@ -99,12 +99,13 @@ class SelectionMenuWindow():
             # Actions for the top menu
             pass
         else:
-            if self.obj == []:
-                return False
-            
             # Actions for the bottom menu
+            # Chest
+            action = self.menuActions[self.currentAction]
             if self.type == OPEN:
-                action = self.menuActions[self.currentAction]
+
+                if self.obj == []:
+                    return False
                 
                 if action == 'Take':
                     self.game.player.inventory.addItems(self.obj, self.activeAction)
@@ -113,6 +114,17 @@ class SelectionMenuWindow():
                 if action == 'TakeAll':
                     self.game.player.inventory.addItems(self.obj)
                     self.game.isDialogWindow = False
+
+            # Inventory        
+            elif self.type == INVENTORY_OPEN:
+       
+                if action == 'Use':
+                    self.game.player.inventory.useItem(self.activeAction)
+                if action == 'Drop':
+                    self.game.player.inventory.dropItem(self.activeAction)
+                    
+                self.checkOpenWindow(INVENTORY_OPEN)
+                self.game.isDialogWindow = True
 
     def update(self) -> None:
         ''' Update '''
@@ -141,7 +153,7 @@ class SelectionMenuWindow():
 
             playerPos = pg.Vector2(self.game.player.rect.center)
             for i, chestObj in enumerate(self.game.mapObjects['randomChest']):
-                if playerPos.distance_to(chestObj.pos) < 30:
+                if playerPos.distance_to(chestObj.pos) < 3000:
 
                     if not chestObj.isGeneratedItems:
                         chestObj.dropItems()

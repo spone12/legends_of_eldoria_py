@@ -3,27 +3,48 @@ import json
 from gameSettings import *
 
 class Item():
-    def __init__(self, game, data: str):
+
+    def __init__(self, game, objName:str, data: str):
 
         self.game = game
+        self.itemEffects = []
+
         data = json.loads(data)
-        self.itemKeys = data.keys()
-        
+        setattr(self, 'objName', objName)
+
         # Establish the properties of objects
-        for k, v in data.items():
-            setattr(self, k, v)
+        for key, v in data.items():
+            setattr(self, key, v)
+
+            # Set item effects
+            if key not in ['name', 'dropChance']:
+                self.itemEffects.append(key)
 
         # self.image = pg.Surface()
 
-    def getItemProperties(self):
-        for key in self.itemKeys:
-            print(self.prop(key))
-
     def prop(self, prop):
+        ''' Get item attribute '''
+
         return getattr(self, prop)
+    
+    def useItem(self):
+        ''' Use item '''
 
-class EmptyItem():
-    def __init__(self, game):
+        if self.itemEffects == []:
+            return False
+        
+        for effect in self.itemEffects:
+            playerEffectValue = getattr(self.game.player, effect)
+            itemEffectValue = self.prop(effect)
 
-        self.game = game
-        self.name = 'Empty'
+            if effect == 'mp':
+                if playerEffectValue + itemEffectValue > PLAYER_MP:
+                    itemEffectValue = 0
+                    playerEffectValue = PLAYER_MP
+
+            elif effect == 'hp':
+                if playerEffectValue + itemEffectValue > PLAYER_HP:
+                    itemEffectValue = 0
+                    playerEffectValue = PLAYER_HP
+
+            setattr(self.game.player, effect, playerEffectValue + itemEffectValue)
