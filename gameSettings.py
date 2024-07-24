@@ -21,13 +21,14 @@ GAME_FOLDER = path.dirname(__file__)
 IMG_FOLDER = path.join(GAME_FOLDER, 'Images')
 IMPORT_FOLDER = path.join(GAME_FOLDER, 'Import/csv/')
 
-# Actions
+# Actions 
 OPEN = 'OPEN'
 INVENTORY_OPEN = 'INVENTORY_OPEN'
 
 # HUD
 BAR_LENGTH = 150
 BAR_HEIGHT = 20
+MAX_INVENTORY_ITEMS = 15
 
 #Player settings
 PLAYER_HP = 100

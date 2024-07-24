@@ -15,7 +15,7 @@ class SelectionMenuWindow():
         self.last_update = pg.time.get_ticks()  # Latest update time
 
         self.type = INVENTORY_OPEN
-        self.obj = None
+        self.obj = []
         self.actions = []
         self.currentAction = 0
         self.activeAction = 0
@@ -32,25 +32,28 @@ class SelectionMenuWindow():
         self.actions = actions
         self.game.screen.fill(BLACK)
 
-        # Top menu
-        for i, action in enumerate(actions):
-            color = LIGHTGREY
-            if (self.isUpperMenuActive and i == self.currentAction) or (not self.isUpperMenuActive and i == self.activeAction):
-                color = self.fontColor
-            
-            self.screenText(action, color, 100, 100 + i * 40)
-
-        # Bottom menu
-        for i, action in enumerate(self.menuActions):
-            color = self.fontColor if i == self.currentAction and not self.isUpperMenuActive else LIGHTGREY
-            self.screenText(action, color, 100 + i * 90,  SCREEN_HEIGHT - 100)
-        
         if self.type == INVENTORY_OPEN:
             text = 'INVENTORY'
         else:
             text = 'CHEST'
-        
-        self.screenText(text, LIGHTGREY, 50, 30)
+
+        if len(self.actions) == 0:
+           self.screenText(text + ' EMPTY', LIGHTGREY, 50, 30)      
+        else:
+            # Top menu
+            for i, action in enumerate(actions):
+                color = LIGHTGREY
+                if (self.isUpperMenuActive and i == self.currentAction) or (not self.isUpperMenuActive and i == self.activeAction):
+                    color = self.fontColor
+                
+                self.screenText(action, color, 100, 100 + i * 40)
+
+            # Bottom menu
+            for i, action in enumerate(self.menuActions):
+                color = self.fontColor if i == self.currentAction and not self.isUpperMenuActive else LIGHTGREY
+                self.screenText(action, color, 100 + i * 90,  SCREEN_HEIGHT - 100)
+            
+            self.screenText(text, LIGHTGREY, 50, 30)
 
     def screenText(self, text, color: str, x: int, y: int):
         ''' Render elements on window '''
@@ -62,6 +65,10 @@ class SelectionMenuWindow():
         ''' Menu control '''
         
         keys = pg.key.get_pressed()
+
+        if len(self.actions) == 0 and not keys[pg.K_ESCAPE]:
+            return False
+        
         if self.isUpperMenuActive:
             if keys[pg.K_UP] or keys[pg.K_w]:
                 self.currentAction = (self.currentAction - 1) % len(self.actions)
@@ -92,7 +99,7 @@ class SelectionMenuWindow():
             # Actions for the top menu
             pass
         else:
-            if self.obj == None:
+            if self.obj == []:
                 return False
             
             # Actions for the bottom menu
@@ -101,7 +108,11 @@ class SelectionMenuWindow():
                 
                 if action == 'Take':
                     self.game.player.inventory.addItems(self.obj, self.activeAction)
-
+                    self.checkOpenWindow(OPEN)
+                    self.game.isDialogWindow = True
+                if action == 'TakeAll':
+                    self.game.player.inventory.addItems(self.obj)
+                    self.game.isDialogWindow = False
 
     def update(self) -> None:
         ''' Update '''
@@ -120,9 +131,7 @@ class SelectionMenuWindow():
 
         if type == INVENTORY_OPEN:
             isOpenWindow =  True
-            if len(self.game.player.inventory.items) == 0:
-                self.actions.append(EmptyItem(self.game).name)
-            else:
+            if len(self.game.player.inventory.items) > 0:
                 self.actions = self.game.player.inventory.getItemsByAttr('name')
 
             self.menuActions = ['Use', 'Drop']
@@ -139,7 +148,7 @@ class SelectionMenuWindow():
                     
                     isOpenWindow = True
                     self.menuActions = ['Take', 'TakeAll']
-                    self.obj = chestObj
+                    self.obj = ['randomChest']
 
                     for item in chestObj.items:
                         self.actions.append(item.name)
@@ -155,4 +164,4 @@ class SelectionMenuWindow():
         self.currentAction = 0
         self.activeAction = 0
         self.isUpperMenuActive = True
-        self.obj = None
+        self.obj = []

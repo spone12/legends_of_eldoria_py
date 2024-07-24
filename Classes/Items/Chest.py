@@ -26,8 +26,5 @@ class Chest():
             if chanse <= data['dropChance']:
                 self.items.append(Item(self.game, item['data']))
                 countItems += 1
-
-        if len(self.items) == 0:
-            self.items.append(EmptyItem(self.game))
         
         self.isGeneratedItems = True

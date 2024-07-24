@@ -12,14 +12,23 @@ class Inventory():
     
     def addItems(self, obj, itemId = None):
         ''' Add items to Inventory'''
-
+        
         if itemId != None:
-            for i, item in enumerate(obj.items):
-                if i == itemId:
-                    self.items.append(item)
+            for nameObj in obj:
+                for objI, name in enumerate(self.game.mapObjects[nameObj]):
+                    for i, item in enumerate(name.items):
+                        if i == itemId:
+                            self.items.append(item)
+                            del self.game.mapObjects[nameObj][objI].items[i]
+
         else:
-            for item in obj.items:
-                self.items.append(item)
+            for nameObj in obj:
+                for objId, objects in enumerate(self.game.mapObjects[nameObj]):
+
+                    for i, item in enumerate(objects.items):
+                        self.items.append(item)
+                    del self.game.mapObjects[nameObj][objId].items
+                    self.game.mapObjects[nameObj][objId].items = []
 
     def getItems(self):
         ''' Get all inventory items '''
@@ -27,5 +36,5 @@ class Inventory():
 
     def getItemsByAttr(self, attr = 'name'): 
         ''' Get values inventory items by attribute '''
-        
+
         return [getattr(item, attr) for item in self.items]
